@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STAAG Kalender</title>
+<style>
+  /* Farben: abgeleitet von der Karte (Grün = Gemeinde, Grau = Kanton) */
+  :root {
+    --bg: #f4f5f4;
+    --surface: #ffffff;
+    --stage: #e8eee5;       /* Kartenhintergrund, bleibt auch im Darkmode hell */
+    --text: #1d2a1a;
+    --muted: #66705f;
+    --line: #dde2da;
+    --accent: #86a17a;      /* Gemeindegrenze */
+    --fill: #b4d7a3;        /* Gemeindefläche */
+    --on-fill: #1d2a1a;
+    --bad: #a6342b;
+    --bad-bg: #f8e6e3;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(29, 42, 26, .07), 0 6px 18px rgba(29, 42, 26, .06);
+    --s1: .5rem;
+    --s2: 1rem;
+    --s3: 1.5rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121612;
+      --surface: #1b221a;
+      --text: #e8efe5;
+      --muted: #9aa595;
+      --line: #2d372b;
+      --fill: #86a17a;
+      --bad: #ff9a90;
+      --bad-bg: #3a2321;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 18px rgba(0, 0, 0, .25);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+  main {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(.75rem, 3vw, 1.5rem);
+  }
+
+  /* Raster: Karte + Kalender links, Hinweise + Tipp rechts */
+  .grid { display: grid; gap: var(--s2); align-items: start; max-width: 760px; margin: 0 auto; }
+  @media (min-width: 800px) {
+    .grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: var(--s3); max-width: none; }
+    #karte { grid-column: 1; grid-row: 1; }
+    #side  { grid-column: 2; grid-row: 1 / span 2; }
+    .days  { grid-column: 1; grid-row: 2; }
+  }
+
+  /* Karte als Bühne */
+  .panel {
+    background: var(--stage);
+    border-radius: var(--radius);
+    padding: var(--s2);
+    box-shadow: var(--shadow);
+  }
+  .karte { position: relative; width: 100%; }
+  .karte img { display: block; width: 100%; height: auto; }
+  .karte img.overlay { position: absolute; inset: 0; pointer-events: none; }
+  .karte img.base { position: relative; z-index: 2; }
+  #layer-kanton    { z-index: 1; }
+  #layer-gewaesser { z-index: 3; }
+
+  /* Türchen */
+  .days {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .4rem;
+  }
+  @media (min-width: 520px) { .days { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  .days button {
+    font: inherit;
+    min-width: 0;
+    padding: .4rem .2rem;
+    text-align: center;
+    line-height: 1.25;
+    border: 0;
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .days button:hover:not(:disabled) { transform: translateY(-1px); }
+  .days button[aria-current="true"] { background: var(--fill); color: var(--on-fill); box-shadow: 0 0 0 2px var(--accent); }
+  .days button:disabled { background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); opacity: .6; cursor: not-allowed; }
+  .days button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .days .nr { display: block; font-weight: 700; }
+  .days .name {
+    display: block;
+    min-height: 1.25em;
+    font-size: .8rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .days button[aria-current="true"] .name { color: inherit; }
+
+  /* Hinweise */
+  /* Zwei Spalten: Beschriftung | Knöpfe, damit die Ebenen am ersten Hinweis ausgerichtet sind */
+  .steuer {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: .65rem;
+    row-gap: var(--s1);
+    align-items: center;
+    margin-bottom: var(--s2);
+  }
+  .steuer .lbl { color: var(--muted); font-size: .9rem; }
+  #hint-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chip {
+    font: inherit;
+    width: 2.25rem; height: 2.25rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .chip[aria-expanded="true"] { background: var(--fill); color: var(--on-fill); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .layers { grid-column: 2; display: flex; flex-wrap: wrap; gap: .45rem; }
+  .layers label {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .35rem .85rem .35rem .65rem;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    font-size: .92rem;
+    user-select: none;
+    transition: background .15s;
+  }
+  .layers label:has(input:checked) { background: var(--fill); color: var(--on-fill); }
+  .layers input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: .95rem; height: .95rem;
+    margin: 0;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+  }
+  .layers input::after {
+    content: "";
+    width: .35rem; height: .35rem;
+    border-radius: 50%;
+    background: var(--fill);
+    transform: scale(0);
+    transition: transform .15s;
+  }
+  .layers input:checked { background: var(--on-fill); border-color: var(--on-fill); }
+  .layers input:checked::after { transform: scale(1); }
+  .layers input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  #hint-liste { list-style: none; margin: 0 0 var(--s2); padding: 0; display: grid; gap: var(--s1); }
+  #hint-liste:empty { margin: 0; }
+  #hint-liste li {
+    padding: .65rem .9rem;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    animation: ein .25s ease;
+  }
+  #hint-liste b { margin-right: .5rem; color: var(--muted); }
+
+  /* Tipp */
+  .combo { position: relative; }
+  #vorschlaege {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    z-index: 10;
+    margin: 0; padding: .25rem;
+    list-style: none;
+    max-height: 16rem;
+    overflow-y: auto;
+    background: var(--surface);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+  }
+  #vorschlaege li { padding: .5rem .65rem; border-radius: 6px; cursor: pointer; }
+  #vorschlaege li[aria-selected="true"] { background: var(--fill); color: var(--on-fill); }
+  input[type="text"] {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;   /* mind. 16px, sonst zoomt iOS beim Fokus */
+    padding: .7rem .9rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+  }
+  input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  input:disabled { opacity: .5; cursor: not-allowed; }
+  .combo.shake { animation: wackeln .35s; }
+
+  .feedback { margin-top: .6rem; display: grid; gap: var(--s1); }
+  .msg { margin: 0; padding: .6rem .9rem; border-radius: 10px; font-weight: 600; }
+  .msg:not([hidden]) { animation: ein .35s ease; }
+  .msg.ok  { background: var(--fill); color: var(--on-fill); }
+  .msg.bad { background: var(--bad-bg); color: var(--bad); }
+  .msg.info { background: var(--surface); color: var(--muted); box-shadow: var(--shadow); font-weight: 400; }
+  .wrong { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+  .wrong li {
+    padding: .15rem .7rem;
+    border-radius: 999px;
+    background: var(--bad-bg);
+    color: var(--bad);
+    font-size: .9rem;
+    text-decoration: line-through;
+    white-space: nowrap;
+  }
+
+  /* Smartphone: Eingabe fest am unteren Rand, Vorschläge öffnen nach oben */
+  @media (max-width: 799px) {
+    #bar {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column-reverse;   /* Meldung über dem Eingabefeld */
+      padding: .6rem clamp(.75rem, 3vw, 1.5rem) calc(.6rem + env(safe-area-inset-bottom, 0px));
+      background: var(--surface);
+      box-shadow: 0 -4px 18px rgba(0, 0, 0, .14);
+    }
+    #bar .feedback { margin: 0 0 var(--s1); }
+    #bar .wrong { flex-wrap: nowrap; overflow-x: auto; }
+    #vorschlaege { top: auto; bottom: calc(100% + 4px); max-height: 40vh; }
+  }
+
+  /* Konfetti */
+  .konfetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
+  .konfetti i {
+    position: absolute;
+    top: -14px;
+    width: var(--sz); height: calc(var(--sz) * 1.6);
+    background: var(--c);
+    border-radius: 2px;
+    animation: fall var(--d) ease-in var(--w) forwards;
+  }
+
+  @keyframes ein { from { opacity: 0; transform: translateY(-5px); } }
+  @keyframes wackeln { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+  @keyframes fall { to { transform: translate3d(var(--x), 105vh, 0) rotate(var(--r)); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="msg info" id="leer" hidden>Noch kein Türchen offen. Der Kalender startet am 1. Dezember.</p>
+
+  <div class="grid">
+    <div class="panel" id="karte" hidden>
+      <div class="karte">
+        <img class="base" id="layer-gemeinde" alt="Umriss der gesuchten Gemeinde">
+        <img class="overlay" id="layer-kanton" alt="Kantonsgrenze" hidden>
+        <img class="overlay" id="layer-gewaesser" alt="Gewässer" hidden>
+      </div>
+    </div>
+
+    <div id="side" hidden>
+      <div class="steuer">
+        <span class="lbl">Hinweise</span>
+        <div id="hint-chips"></div>
+        <div class="layers">
+          <label><input type="checkbox" data-layer="layer-kanton"> Kantonsgrenze</label>
+          <label><input type="checkbox" data-layer="layer-gewaesser"> Gewässer</label>
+        </div>
+      </div>
+      <ul id="hint-liste"></ul>
+
+      <div id="bar">
+        <form id="form" autocomplete="off">
+          <div class="combo" id="combo">
+            <input type="text" id="tipp" role="combobox" aria-expanded="false" aria-controls="vorschlaege" aria-autocomplete="list" enterkeyhint="go" placeholder="Gesuchte Gemeinde eingeben" aria-label="Gesuchte Gemeinde" required>
+            <ul id="vorschlaege" role="listbox" hidden></ul>
+          </div>
+        </form>
+        <div class="feedback">
+          <p class="msg" id="msg" hidden></p>
+          <ul class="wrong" id="wrong" aria-label="Falsche Tipps"></ul>
+        </div>
+      </div>
+    </div>
+
+    <nav class="days" id="days" aria-label="Türchen"></nav>
+  </div>
+</main>
+
+<script>
+(async function () {
+  const JAHR = 2026;
+  const $ = id => document.getElementById(id);
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                     .replace(/\(ag\)/g, '')
+                     .replace(/[-\s]+/g, ' ').trim();
+  const src = p => encodeURI(p);
+  const reduziert = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Testdatum: index.html?datum=2026-12-05
+  let heute = new Date();
+  const dp = new URLSearchParams(location.search).get('datum');
+  if (dp) { const d = new Date(dp + 'T12:00:00'); if (!isNaN(d)) heute = d; }
+  const offen = tag => heute >= new Date(JAHR, 11, tag);
+
+  // Daten laden
+  async function ladeJson(pfad) {
+    let r;
+    try { r = await fetch(pfad); }
+    catch (e) { throw new Error(`${pfad}: nicht ladbar (${location.protocol === 'file:' ? 'Seite wurde per file:// geöffnet, bitte über einen Webserver öffnen' : e.message})`); }
+    if (!r.ok) throw new Error(`${pfad}: HTTP ${r.status} (Datei nicht gefunden, Pfad oder Gross-/Kleinschreibung prüfen)`);
+    try { return await r.json(); }
+    catch (e) { throw new Error(`${pfad}: ungültiges JSON (${e.message})`); }
+  }
+
+  let kalender, gemeinden;
+  try {
+    [kalender, gemeinden] = await Promise.all([
+      ladeJson('hints/hints.json'),
+      ladeJson('hints/gemeinden.json')
+    ]);
+  } catch (e) {
+    $('leer').textContent = 'Daten konnten nicht geladen werden: ' + e.message;
+    $('leer').hidden = false;
+    return;
+  }
+  kalender.sort((a, b) => a.tag - b.tag);
+  gemeinden.sort((a, b) => a.localeCompare(b, 'de'));
+
+  // Tipps pro Tag, nur im Arbeitsspeicher: nach dem Neuladen beginnt alles von vorne
+  const staende = {};
+  const lade = tag => staende[tag] || (staende[tag] = { falsch: [], geloest: false });
+
+  let aktuell = null;
+
+  // Ebenen (beim Wechsel des Türchens zurückgesetzt)
+  const boxen = [...document.querySelectorAll('.layers input')];
+  const syncLayer = cb => { $(cb.dataset.layer).hidden = !cb.checked; };
+  boxen.forEach(cb => cb.addEventListener('change', () => syncLayer(cb)));
+  function resetLayers() { boxen.forEach(cb => { cb.checked = false; syncLayer(cb); }); }
+
+  // Eingabeleiste: auf dem Handy fest unten, Platz im Seitenende freihalten
+  const bar = $('bar'), mq = matchMedia('(max-width: 799px)');
+  const polster = () => { document.body.style.paddingBottom = mq.matches ? bar.offsetHeight + 'px' : ''; };
+  new ResizeObserver(polster).observe(bar);
+  mq.addEventListener('change', polster);
+
+  // Autocomplete: Tab übernimmt den Vorschlag, Enter übernimmt und bestätigt
+  const liste = $('vorschlaege'), feld = $('tipp');
+  let treffer = [], aktiv = 0;
+
+  function zeichneVorschlaege() {
+    liste.innerHTML = '';
+    treffer.forEach((g, i) => {
+      const li = document.createElement('li');
+      li.textContent = g;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', i === aktiv);
+      li.addEventListener('mousedown', ev => { ev.preventDefault(); uebernehmen(g); });
+      liste.appendChild(li);
+    });
+    liste.hidden = !treffer.length;
+    feld.setAttribute('aria-expanded', !!treffer.length);
+    const sel = liste.children[aktiv];
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  }
+  function schliesse() { treffer = []; zeichneVorschlaege(); }
+  function uebernehmen(g) { feld.value = g; schliesse(); feld.focus(); }
+  function aktualisiere() {
+    const q = norm(feld.value);
+    if (!q) return schliesse();
+    const anfang = gemeinden.filter(g => norm(g).startsWith(q));
+    const enthaelt = gemeinden.filter(g => !norm(g).startsWith(q) && norm(g).includes(q));
+    treffer = [...anfang, ...enthaelt].slice(0, 8);
+    aktiv = 0;
+    zeichneVorschlaege();
+  }
+  const istExakt = () => treffer.length && norm(feld.value) === norm(treffer[aktiv]);
+
+  feld.addEventListener('input', aktualisiere);
+  feld.addEventListener('blur', schliesse);
+  feld.addEventListener('keydown', ev => {
+    if (!treffer.length) return;
+    if (ev.key === 'ArrowDown') { ev.preventDefault(); aktiv = (aktiv + 1) % treffer.length; zeichneVorschlaege(); }
+    else if (ev.key === 'ArrowUp') { ev.preventDefault(); aktiv = (aktiv - 1 + treffer.length) % treffer.length; zeichneVorschlaege(); }
+    else if (ev.key === 'Escape') { schliesse(); }
+    else if (ev.key === 'Tab' && !ev.shiftKey) { ev.preventDefault(); uebernehmen(treffer[aktiv]); }
+    else if (ev.key === 'Enter' && !istExakt()) { ev.preventDefault(); uebernehmen(treffer[aktiv]); $('form').requestSubmit(); }
+  });
+
+  // 24 Türchen: ohne Daten oder noch nicht offen ausgegraut, Name erst ab Freischaltung
+  function zeichneTage() {
+    $('days').innerHTML = '';
+    for (let tag = 1; tag <= 24; tag++) {
+      const e = kalender.find(k => k.tag === tag);
+      const frei = !!e && offen(tag);
+      const b = document.createElement('button');
+      const nr = document.createElement('span');
+      const name = document.createElement('span');
+      nr.className = 'nr';
+      nr.textContent = tag;
+      name.className = 'name';
+      name.textContent = frei ? e.team_member : '\u00a0';
+      b.append(nr, name);
+      if (frei) b.title = `${tag}: ${e.team_member}`;
+      b.disabled = !frei;
+      if (aktuell && aktuell.tag === tag) b.setAttribute('aria-current', 'true');
+      if (frei) b.onclick = () => { zeige(e); $('karte').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      $('days').appendChild(b);
+    }
+  }
+
+  // Hinweise: nummerierte Knöpfe, Klick blendet den Text ein/aus
+  function zeichneHints(e) {
+    const chips = $('hint-chips'), ul = $('hint-liste');
+    chips.querySelectorAll('button').forEach(b => b.remove());
+    ul.innerHTML = '';
+    [...e.hints].sort((a, b) => a.hint_nr - b.hint_nr).forEach(h => {
+      const li = document.createElement('li');
+      const nr = document.createElement('b');
+      nr.textContent = h.hint_nr;
+      li.append(nr, h.hint);
+      li.hidden = true;
+      ul.appendChild(li);
+
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip';
+      b.textContent = h.hint_nr;
+      b.setAttribute('aria-label', `Hinweis ${h.hint_nr}`);
+      b.setAttribute('aria-expanded', 'false');
+      b.onclick = () => {
+        li.hidden = !li.hidden;
+        b.setAttribute('aria-expanded', String(!li.hidden));
+      };
+      chips.appendChild(b);
+    });
+  }
+
+  function zeige(e) {
+    aktuell = e;
+    $('karte').hidden = false;
+    $('side').hidden = false;
+
+    resetLayers();
+    $('layer-gemeinde').src = src(e.svg_gemeinde);
+    $('layer-kanton').src = src(e.svg_kanton);
+    $('layer-gewaesser').src = src(e.svg_gewaesser);
+
+    zeichneHints(e);
+    feld.value = '';
+    schliesse();
+    zeigeStatus();
+    zeichneTage();
+  }
+
+  // Gelöst: Kantonsgrenze und Gewässer einblenden, alle Hinweise aufklappen
+  function zeigeLoesung() {
+    boxen.forEach(cb => { cb.checked = true; syncLayer(cb); });
+    document.querySelectorAll('#hint-chips .chip').forEach(b => {
+      if (b.getAttribute('aria-expanded') !== 'true') b.click();
+    });
+  }
+
+  function zeigeStatus(meldung) {
+    const st = lade(aktuell.tag);
+
+    $('wrong').innerHTML = '';
+    st.falsch.forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f;
+      $('wrong').appendChild(li);
+    });
+
+    feld.disabled = st.geloest;
+
+    const msg = $('msg');
+    if (st.geloest) {
+      msg.className = 'msg ok';
+      msg.textContent = `Richtig! Die gesuchte Gemeinde ist ${aktuell.gemeinde}.`;
+      msg.hidden = false;
+      zeigeLoesung();
+    } else if (meldung) {
+      msg.className = 'msg ' + meldung.typ;
+      msg.textContent = meldung.text;
+      msg.hidden = false;
+    } else {
+      msg.hidden = true;
+    }
+  }
+
+  function konfetti() {
+    if (reduziert) return;
+    const farben = ['#86a17a', '#b4d7a3', '#448ec1', '#8a8a8a'];
+    const box = document.createElement('div');
+    box.className = 'konfetti';
+    for (let i = 0; i < 40; i++) {
+      const k = document.createElement('i');
+      k.style.cssText = `left:${Math.random() * 100}%;--c:${farben[i % farben.length]};` +
+        `--sz:${6 + Math.random() * 6}px;--d:${1.6 + Math.random() * 1.2}s;--w:${Math.random() * .4}s;` +
+        `--x:${(Math.random() - .5) * 160}px;--r:${(Math.random() - .5) * 900}deg`;
+      box.appendChild(k);
+    }
+    document.body.appendChild(box);
+    setTimeout(() => box.remove(), 3500);
+  }
+
+  function wackeln() {
+    const c = $('combo');
+    c.classList.remove('shake');
+    void c.offsetWidth;
+    c.classList.add('shake');
+  }
+
+  // Tipp abgeben (Enter)
+  $('form').addEventListener('submit', ev => {
+    ev.preventDefault();
+    schliesse();
+    const eingabe = feld.value.trim();
+    if (!eingabe) return;
+
+    const name = gemeinden.find(g => norm(g) === norm(eingabe));
+    if (!name) {
+      zeigeStatus({ typ: 'info', text: 'Bitte eine Gemeinde aus der Vorschlagsliste wählen.' });
+      return;
+    }
+
+    const st = lade(aktuell.tag);
+    if (norm(name) === norm(aktuell.gemeinde)) {
+      st.geloest = true;
+      zeigeStatus();
+      zeichneTage();
+      konfetti();
+    } else {
+      if (!st.falsch.includes(name)) st.falsch.push(name);
+      feld.value = '';
+      zeigeStatus({ typ: 'bad', text: 'Falsch!' });
+      wackeln();
+    }
+  });
+
+  // Start: neuestes offenes Türchen
+  const offene = kalender.filter(e => offen(e.tag));
+  zeichneTage();
+  if (offene.length) zeige(offene[offene.length - 1]);
+  else $('leer').hidden = false;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+[
+  {
+    "gemeinde": "Densbüren",
+    "hints": [
+      {
+        "hint_nr": "1",
+        "hint": "liegt nördlich vom Homberg"
+      },
+      {
+        "hint_nr": "2",
+        "hint": "liegt westlich vom Homberg"
+      },
+      {
+        "hint_nr": "3",
+        "hint": "liegt südöstlich vom Homberg"
+      },
+      {
+        "hint_nr": "4",
+        "hint": "dort befindet sich er Skilift mit der Betriebsnummer 'AG 1'"
+      },
+      {
+        "hint_nr": "5",
+        "hint": "dort befindet sich der höchste, ganz im Kanton liegende Berg (Strihe 867 m ü.M.)"
+      },
+      {
+        "hint_nr": "6",
+        "hint": "auf Schweizerdeutsch 'Däischbere'"
+      }
+    ],
+    "svg_gemeinde": "maps/svg/Densbüren.svg",
+    "svg_kanton": "maps/svg/kanton.svg",
+    "svg_gewaesser": "maps/svg/gewaesser.svg",
+    "tag": 1,
+    "team_member": "test 1"
+  },
+  {
+    "gemeinde": "Baden",
+    "hints": [
+      {
+        "hint_nr": "1",
+        "hint": "hat per 01.01.2024 mit einer anderen Gemeinde Fusioniert"
+      },
+      {
+        "hint_nr": "2",
+        "hint": "Gründungsort von ABB"
+      },
+      {
+        "hint_nr": "3",
+        "hint": "bevölkerungsreichste Gemeinde"
+      }
+    ],
+    "svg_gemeinde": "maps/svg/Baden.svg",
+    "svg_kanton": "maps/svg/kanton.svg",
+    "svg_gewaesser": "maps/svg/gewaesser.svg",
+    "tag": 2,
+    "team_member": "test 2"
+  }
+]
