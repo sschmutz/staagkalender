@@ -19,7 +19,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 2,
-    "teamm_member": "Pascal"
+    "team_member": "Pascal"
   },
   {
     "gemeinde": "Biberstein",
@@ -45,7 +45,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 16,
-    "teamm_member": "Christoph"
+    "team_member": "Christoph"
   },
   {
     "gemeinde": "Bözberg",
@@ -71,7 +71,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 14,
-    "teamm_member": "Ana"
+    "team_member": "Ana"
   },
   {
     "gemeinde": "Bremgarten (AG)",
@@ -97,7 +97,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 5,
-    "teamm_member": "Delia"
+    "team_member": "Delia"
   },
   {
     "gemeinde": "Densbüren",
@@ -131,7 +131,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 21,
-    "teamm_member": "Piera"
+    "team_member": "Piera"
   },
   {
     "gemeinde": "Frick",
@@ -161,7 +161,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 24,
-    "teamm_member": "Team"
+    "team_member": "Team"
   },
   {
     "gemeinde": "Islisberg",
@@ -191,7 +191,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 8,
-    "teamm_member": "Andrea Z."
+    "team_member": "Andrea Z."
   },
   {
     "gemeinde": "Klingnau",
@@ -221,7 +221,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 6,
-    "teamm_member": "Philipp"
+    "team_member": "Philipp"
   },
   {
     "gemeinde": "Muhen",
@@ -247,7 +247,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 12,
-    "teamm_member": "Sara"
+    "team_member": "Sara"
   },
   {
     "gemeinde": "Rheinfelden",
@@ -273,7 +273,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 10,
-    "teamm_member": "Norah"
+    "team_member": "Norah"
   },
   {
     "gemeinde": "Schafisheim",
@@ -299,7 +299,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 15,
-    "teamm_member": "Team"
+    "team_member": "Team"
   },
   {
     "gemeinde": "Seengen",
@@ -325,7 +325,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 7,
-    "teamm_member": "Till"
+    "team_member": "Till"
   },
   {
     "gemeinde": "Spreitenbach",
@@ -355,7 +355,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 18,
-    "teamm_member": "David"
+    "team_member": "David"
   },
   {
     "gemeinde": "Stein (AG)",
@@ -385,7 +385,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 4,
-    "teamm_member": "Team"
+    "team_member": "Team"
   },
   {
     "gemeinde": "Suhr",
@@ -411,7 +411,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 23,
-    "teamm_member": "Stefan"
+    "team_member": "Stefan"
   },
   {
     "gemeinde": "Unterentfelden",
@@ -437,7 +437,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 9,
-    "teamm_member": "Andrea P."
+    "team_member": "Andrea P."
   },
   {
     "gemeinde": "Villigen",
@@ -459,7 +459,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 22,
-    "teamm_member": "Raphael"
+    "team_member": "Raphael"
   },
   {
     "gemeinde": "Vordemwald",
@@ -481,7 +481,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 13,
-    "teamm_member": "Jonas"
+    "team_member": "Jonas"
   },
   {
     "gemeinde": "Wettingen",
@@ -511,7 +511,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 19,
-    "teamm_member": "Team"
+    "team_member": "Team"
   },
   {
     "gemeinde": "Wiliberg",
@@ -541,7 +541,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 3,
-    "teamm_member": "Adrian"
+    "team_member": "Adrian"
   },
   {
     "gemeinde": "Windisch",
@@ -571,7 +571,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 17,
-    "teamm_member": "Team"
+    "team_member": "Team"
   },
   {
     "gemeinde": "Wohlen (AG)",
@@ -605,7 +605,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 1,
-    "teamm_member": "Liliana"
+    "team_member": "Liliana"
   },
   {
     "gemeinde": "Zofingen",
@@ -635,7 +635,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 20,
-    "teamm_member": "Laura"
+    "team_member": "Laura"
   },
   {
     "gemeinde": "Zurzach",
@@ -665,6 +665,6 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 11,
-    "teamm_member": "Team"
+    "team_member": "Team"
   }
 ]

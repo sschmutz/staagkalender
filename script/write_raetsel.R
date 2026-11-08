@@ -51,7 +51,7 @@ hints <-
   bind_cols(
     tag = sample(1:24),
     # 24. ist fix fürs Team
-    teamm_member = c(sample(team_members), "Team")
+    team_member = c(sample(team_members), "Team")
   )
 
 write_json(
