@@ -3,6 +3,63 @@ library(here)
 library(sf)
 library(jsonlite)
 
+# hints
+set.seed(12)
+
+team_members <-
+  c(
+    "Adrian",
+    "Ana",
+    "Andrea P.",
+    "Andrea Z.",
+    "Christoph",
+    "David",
+    "Delia",
+    "Jonas",
+    "Laura",
+    "Liliana",
+    "Norah",
+    "Pascal",
+    "Philipp",
+    "Piera",
+    "Raphael",
+    "Sara",
+    "Stefan",
+    "Till",
+    # restliche Tage mit "Team" auffüllen
+    # ohne 24., dieser ist fix fürs Team
+    rep("Team", 5)
+  )
+
+hints <-
+  read_csv(here("hints", "hints.csv")) |>
+  pivot_longer(
+    starts_with("hint_nr_"),
+    names_prefix = "hint_nr_",
+    names_to = "hint_nr",
+    values_to = "hint",
+    values_drop_na = TRUE
+  ) |>
+  group_by(gemeinde) |>
+  nest("hints" = starts_with("hint")) |>
+  ungroup() |>
+  mutate(
+    svg_gemeinde = paste0("maps/svg/", gemeinde, ".svg"),
+    svg_kanton = "maps/svg/kanton.svg",
+    svg_gewaesser = "maps/svg/gewaesser.svg"
+  ) |>
+  bind_cols(
+    tag = sample(1:24),
+    # 24. ist fix fürs Team
+    teamm_member = c(sample(team_members), "Team")
+  )
+
+write_json(
+  hints,
+  here("hints", "hints.json"),
+  pretty = TRUE
+)
+
 # maps
 
 # verfügbare Layers abfragen
@@ -22,6 +79,13 @@ gemeinden <-
     layer = "tlm_hoheitsgebiet"
   ) |>
   filter(kantonsnummer == 19)
+
+# json mit allen Gemeinden für Lösungsvorschläge schreiben
+write_json(
+  sort(gemeinden$name),
+  here("hints", "gemeinden.json"),
+  pretty = TRUE
+)
 
 gewaesser_stehend <-
   st_read(
@@ -121,50 +185,4 @@ ggsave(
   map_gewaesser,
   height = 10,
   width = 10
-)
-
-
-# hints
-set.seed(12)
-
-team_members <-
-  c()
-
-hints <-
-  read_csv(here("hints", "hints.csv")) |>
-  pivot_longer(
-    starts_with("hint_nr_"),
-    names_prefix = "hint_nr_",
-    names_to = "hint_nr",
-    values_to = "hint",
-    values_drop_na = TRUE
-  ) |>
-  group_by(gemeinde) |>
-  nest("hints" = starts_with("hint")) |>
-  ungroup() |>
-  mutate(
-    svg_gemeinde = paste0("maps/svg/", gemeinde, ".svg"),
-    svg_kanton = "maps/svg/kanton.svg",
-    svg_gewaesser = "maps/svg/gewaesser.svg"
-  ) |>
-  # TODO: ersetzen
-  mutate(
-    tag = row_number(),
-    team_member = paste("test", row_number())
-  )
-# bind_cols(
-#   tag = sample(1:24),
-#   teamm_member = sample(team_members)
-# )
-
-write_json(
-  hints,
-  here("hints", "hints.json"),
-  pretty = TRUE
-)
-
-write_json(
-  sort(gemeinden$name),
-  here("hints", "gemeinden.json"),
-  pretty = TRUE
 )
