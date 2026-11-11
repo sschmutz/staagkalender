@@ -9,12 +9,12 @@
   :root {
     --bg: #f4f5f4;
     --surface: #ffffff;
-    --stage: #e8eee5;       /* Kartenhintergrund, bleibt auch im Darkmode hell */
+    --stage: #e8eee5;      /* Kartenhintergrund, bleibt auch im Darkmode hell */
     --text: #1d2a1a;
     --muted: #66705f;
     --line: #dde2da;
-    --accent: #86a17a;      /* Gemeindegrenze */
-    --fill: #b4d7a3;        /* Gemeindefläche */
+    --accent: #86a17a;     /* Gemeindegrenze */
+    --fill: #b4d7a3;       /* Gemeindefläche */
     --on-fill: #1d2a1a;
     --bad: #a6342b;
     --bad-bg: #f8e6e3;
@@ -40,7 +40,6 @@
 
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-
   body {
     margin: 0;
     background: var(--bg);
@@ -75,7 +74,7 @@
   .karte img { display: block; width: 100%; height: auto; }
   .karte img.overlay { position: absolute; inset: 0; pointer-events: none; }
   .karte img.base { position: relative; z-index: 2; }
-  #layer-kanton    { z-index: 1; }
+  #layer-kanton { z-index: 1; }
   #layer-gewaesser { z-index: 3; }
 
   /* Türchen */
@@ -207,10 +206,11 @@
   }
   #vorschlaege li { padding: .5rem .65rem; border-radius: 6px; cursor: pointer; }
   #vorschlaege li[aria-selected="true"] { background: var(--fill); color: var(--on-fill); }
+
   input[type="text"] {
     width: 100%;
     font: inherit;
-    font-size: 1rem;   /* mind. 16px, sonst zoomt iOS beim Fokus */
+    font-size: 1rem; /* mind. 16px, sonst zoomt iOS beim Fokus */
     padding: .7rem .9rem;
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -224,8 +224,8 @@
   .feedback { margin-top: .6rem; display: grid; gap: var(--s1); }
   .msg { margin: 0; padding: .6rem .9rem; border-radius: 10px; font-weight: 600; }
   .msg:not([hidden]) { animation: ein .35s ease; }
-  .msg.ok  { background: var(--fill); color: var(--on-fill); }
-  .msg.bad { background: var(--bad-bg); color: var(--bad); }
+  .msg.ok   { background: var(--fill); color: var(--on-fill); }
+  .msg.bad  { background: var(--bad-bg); color: var(--bad); }
   .msg.info { background: var(--surface); color: var(--muted); box-shadow: var(--shadow); font-weight: 400; }
   .wrong { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; list-style: none; }
   .wrong li {
@@ -238,21 +238,15 @@
     white-space: nowrap;
   }
 
-  /* Smartphone: Eingabe fest am unteren Rand, Vorschläge öffnen nach oben */
+  /* Smartphone: Eingabe bleibt im normalen Seitenfluss (keine fixierte Leiste),
+     Vorschläge erscheinen direkt unter dem Feld und schieben den Inhalt nach unten */
   @media (max-width: 799px) {
-    #bar {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      z-index: 20;
-      display: flex;
-      flex-direction: column-reverse;   /* Meldung über dem Eingabefeld */
-      padding: .6rem clamp(.75rem, 3vw, 1.5rem) calc(.6rem + env(safe-area-inset-bottom, 0px));
-      background: var(--surface);
-      box-shadow: 0 -4px 18px rgba(0, 0, 0, .14);
+    #vorschlaege {
+      position: static;
+      margin-top: 4px;
+      max-height: 12rem;
     }
-    #bar .feedback { margin: 0 0 var(--s1); }
-    #bar .wrong { flex-wrap: nowrap; overflow-x: auto; }
-    #vorschlaege { top: auto; bottom: calc(100% + 4px); max-height: 40vh; }
+    #vorschlaege li { padding: .8rem .8rem; } /* grössere Tippfläche */
   }
 
   /* Konfetti */
@@ -265,11 +259,9 @@
     border-radius: 2px;
     animation: fall var(--d) ease-in var(--w) forwards;
   }
-
   @keyframes ein { from { opacity: 0; transform: translateY(-5px); } }
   @keyframes wackeln { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
   @keyframes fall { to { transform: translate3d(var(--x), 105vh, 0) rotate(var(--r)); } }
-
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
   }
@@ -302,7 +294,7 @@
       <div id="bar">
         <form id="form" autocomplete="off">
           <div class="combo" id="combo">
-            <input type="text" id="tipp" role="combobox" aria-expanded="false" aria-controls="vorschlaege" aria-autocomplete="list" enterkeyhint="go" placeholder="Gesuchte Gemeinde eingeben" aria-label="Gesuchte Gemeinde" required>
+            <input type="text" id="tipp" role="combobox" aria-expanded="false" aria-controls="vorschlaege" aria-autocomplete="list" enterkeyhint="go" placeholder="Gesuchte Gemeinde eingeben" aria-label="Gesuchte Gemeinde" autocapitalize="words" autocorrect="off" spellcheck="false" required>
             <ul id="vorschlaege" role="listbox" hidden></ul>
           </div>
         </form>
@@ -322,8 +314,8 @@
   const JAHR = 2026;
   const $ = id => document.getElementById(id);
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                     .replace(/\(ag\)/g, '')
-                     .replace(/[-\s]+/g, ' ').trim();
+    .replace(/\(ag\)/g, '')
+    .replace(/[-\s]+/g, ' ').trim();
   const src = p => encodeURI(p);
   const reduziert = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -360,7 +352,6 @@
   // Tipps pro Tag, nur im Arbeitsspeicher: nach dem Neuladen beginnt alles von vorne
   const staende = {};
   const lade = tag => staende[tag] || (staende[tag] = { falsch: [], geloest: false });
-
   let aktuell = null;
 
   // Ebenen (beim Wechsel des Türchens zurückgesetzt)
@@ -368,12 +359,6 @@
   const syncLayer = cb => { $(cb.dataset.layer).hidden = !cb.checked; };
   boxen.forEach(cb => cb.addEventListener('change', () => syncLayer(cb)));
   function resetLayers() { boxen.forEach(cb => { cb.checked = false; syncLayer(cb); }); }
-
-  // Eingabeleiste: auf dem Handy fest unten, Platz im Seitenende freihalten
-  const bar = $('bar'), mq = matchMedia('(max-width: 799px)');
-  const polster = () => { document.body.style.paddingBottom = mq.matches ? bar.offsetHeight + 'px' : ''; };
-  new ResizeObserver(polster).observe(bar);
-  mq.addEventListener('change', polster);
 
   // Autocomplete: Tab übernimmt den Vorschlag, Enter übernimmt und bestätigt
   const liste = $('vorschlaege'), feld = $('tipp');
@@ -386,7 +371,8 @@
       li.textContent = g;
       li.setAttribute('role', 'option');
       li.setAttribute('aria-selected', i === aktiv);
-      li.addEventListener('mousedown', ev => { ev.preventDefault(); uebernehmen(g); });
+      // pointerdown statt mousedown: feuert auch auf Touch-Geräten vor dem blur
+      li.addEventListener('pointerdown', ev => { ev.preventDefault(); uebernehmen(g); });
       liste.appendChild(li);
     });
     liste.hidden = !treffer.length;
@@ -396,12 +382,13 @@
   }
   function schliesse() { treffer = []; zeichneVorschlaege(); }
   function uebernehmen(g) { feld.value = g; schliesse(); feld.focus(); }
+
   function aktualisiere() {
     const q = norm(feld.value);
     if (!q) return schliesse();
     const anfang = gemeinden.filter(g => norm(g).startsWith(q));
     const enthaelt = gemeinden.filter(g => !norm(g).startsWith(q) && norm(g).includes(q));
-    treffer = [...anfang, ...enthaelt]
+    treffer = [...anfang, ...enthaelt]; // kein Limit, die Liste scrollt
     aktiv = 0;
     zeichneVorschlaege();
   }
@@ -471,12 +458,10 @@
     aktuell = e;
     $('karte').hidden = false;
     $('side').hidden = false;
-
     resetLayers();
     $('layer-gemeinde').src = src(e.svg_gemeinde);
     $('layer-kanton').src = src(e.svg_kanton);
     $('layer-gewaesser').src = src(e.svg_gewaesser);
-
     zeichneHints(e);
     feld.value = '';
     schliesse();
@@ -494,16 +479,13 @@
 
   function zeigeStatus(meldung) {
     const st = lade(aktuell.tag);
-
     $('wrong').innerHTML = '';
     st.falsch.forEach(f => {
       const li = document.createElement('li');
       li.textContent = f;
       $('wrong').appendChild(li);
     });
-
     feld.disabled = st.geloest;
-
     const msg = $('msg');
     if (st.geloest) {
       msg.className = 'msg ok';
@@ -548,13 +530,11 @@
     schliesse();
     const eingabe = feld.value.trim();
     if (!eingabe) return;
-
     const name = gemeinden.find(g => norm(g) === norm(eingabe));
     if (!name) {
       zeigeStatus({ typ: 'info', text: 'Bitte eine Gemeinde aus der Vorschlagsliste wählen.' });
       return;
     }
-
     const st = lade(aktuell.tag);
     if (norm(name) === norm(aktuell.gemeinde)) {
       st.geloest = true;
