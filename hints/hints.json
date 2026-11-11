@@ -30,11 +30,11 @@
       },
       {
         "hint_nr": "2",
-        "hint": "Wappentier hat im Sommer 2026 zur temporären Schliessung der Badi geführt"
+        "hint": "das Wappentier hat im Sommer 2026 zur temporären Schliessung der Badi geführt"
       },
       {
         "hint_nr": "3",
-        "hint": "bekanntes Schloss, dient heute als Wohn-, Arbeits und Ausbildungsstätte für erwachsene Menschen mit Unterstützungsbedarf"
+        "hint": "bekanntes Schloss, dient heute als Wohn-, Arbeits- und Ausbildungsstätte für erwachsene Menschen mit Unterstützungsbedarf"
       },
       {
         "hint_nr": "4",
@@ -52,18 +52,22 @@
     "hints": [
       {
         "hint_nr": "1",
-        "hint": "gleichnamiger Strassen- und Eisenbahntunnel"
+        "hint": "'berg' nicht 'tal'"
       },
       {
         "hint_nr": "2",
-        "hint": "war lange Zeit ein potenzieller und intensiv untersuchter Standort für ein Tiefenlager für radioaktive Abfälle, schied im Auswahlprozess der Nagra jedoch gegenüber 'Nördlich Lägern' aus"
+        "hint": "gleichnamiger Strassen- und Eisenbahntunnel"
       },
       {
         "hint_nr": "3",
-        "hint": "mit einer Höhe von 25 m und einem Stammumfang von 11 m befindet sich der mächtigste Baum des Kantons auf dem Gemeindegebiet"
+        "hint": "war lange Zeit ein potenzieller und intensiv untersuchter Standort für ein Tiefenlager für radioaktive Abfälle, schied im Auswahlprozess der Nagra jedoch gegenüber 'Nördlich Lägern' aus"
       },
       {
         "hint_nr": "4",
+        "hint": "mit einer Höhe von 25 m und einem Stammumfang von 11 m befindet sich der mächtigste Baum des Kantons auf dem Gemeindegebiet"
+      },
+      {
+        "hint_nr": "5",
         "hint": "die Linde im Gemeindewappen bezieht sich auf die Linner Linde"
       }
     ],
@@ -146,7 +150,7 @@
       },
       {
         "hint_nr": "3",
-        "hint": "ein Saurier im Kreisel wirbt für das lokale Sauriermuseum"
+        "hint": "ein Dinosaurier im Kreisel wirbt für das lokale Sauriermuseum"
       },
       {
         "hint_nr": "4",
@@ -154,7 +158,7 @@
       },
       {
         "hint_nr": "5",
-        "hint": "der Gemeindename geht auf das römisch-lateinische Wort 'Ferraricia' zurück"
+        "hint": "der Gemeindename geht auf das römisch-lateinische Wort 'Ferraricia' zurück, was 'Eisenerzgebiet' bedeutet"
       }
     ],
     "svg_gemeinde": "maps/svg/Frick.svg",
@@ -206,7 +210,7 @@
       },
       {
         "hint_nr": "3",
-        "hint": "Landschaft um den See ist im 'Bundesinventar der Landschaften und Naturdenkmäler von nationaler Bedeutung' (BLN) aufgeführt"
+        "hint": "die Landschaft um den See ist im 'Bundesinventar der Landschaften und Naturdenkmäler von nationaler Bedeutung' (BLN) aufgeführt"
       },
       {
         "hint_nr": "4",
@@ -453,6 +457,10 @@
       {
         "hint_nr": "3",
         "hint": "der grösste Arbeitgeber ist das Paul Scherrer Institut (PSI)"
+      },
+      {
+        "hint_nr": "4",
+        "hint": "wird wie ein F gesprochen, beginnt aber mit einem anderen Buchstaben"
       }
     ],
     "svg_gemeinde": "maps/svg/Villigen.svg",
@@ -488,15 +496,15 @@
     "hints": [
       {
         "hint_nr": "1",
-        "hint": "drittbevölkerungsreichste Gemeinde (21'935 Einwohnerinnen und Einwohner)"
+        "hint": "der Fussballclub hat in der Saison 88/89 gegen SSC Neapel gespielt, bei dem Diego Maradona spielte (Hinspiel 0:0, Rückspiel 1:2)"
       },
       {
         "hint_nr": "2",
-        "hint": "der Fussballclub hat in der Saison 88/89 gegen SSC Neapel gespielt, bei dem Diego Maradona mitspielte (Hinspiel 0:0, Rückspiel 1:2)"
+        "hint": "drittbevölkerungsreichste Gemeinde (21'935 Einwohnerinnen und Einwohner)"
       },
       {
         "hint_nr": "3",
-        "hint": "Image-Slogan 'Stern an der Limmat'"
+        "hint": "Gemeinde-Slogan 'Stern an der Limmat'"
       },
       {
         "hint_nr": "4",
@@ -612,19 +620,19 @@
     "hints": [
       {
         "hint_nr": "1",
-        "hint": "hat 2002 fusioniert"
-      },
-      {
-        "hint_nr": "2",
         "hint": "seit 1989 Austragungsort der offiziellen Duathlon-Weltmeisterschaft über die Langdistanz"
       },
       {
+        "hint_nr": "2",
+        "hint": "hat 2002 fusioniert"
+      },
+      {
         "hint_nr": "3",
-        "hint": "Austragungsort eines bekannten Open Air Musikfestivals"
+        "hint": "Hauptsitz des grössten Medienkonzerns der Schweiz"
       },
       {
         "hint_nr": "4",
-        "hint": "Hauptsitz des grössten Medienkonzerns der Schweiz"
+        "hint": "Austragungsort eines bekannten Open Air Musikfestivals"
       },
       {
         "hint_nr": "5",
