@@ -200,6 +200,8 @@
     list-style: none;
     max-height: 16rem;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     background: var(--surface);
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
@@ -371,8 +373,10 @@
       li.textContent = g;
       li.setAttribute('role', 'option');
       li.setAttribute('aria-selected', i === aktiv);
-      // pointerdown statt mousedown: feuert auch auf Touch-Geräten vor dem blur
-      li.addEventListener('pointerdown', ev => { ev.preventDefault(); uebernehmen(g); });
+      // Übernommen wird erst bei click (nach dem Loslassen). Würde die Liste schon
+      // beim Drücken verschwinden, rutscht das Layout nach oben und der Klick landet
+      // auf einem Türchen darunter. Scrollen bleibt möglich, da kein preventDefault.
+      li.addEventListener('click', () => uebernehmen(g));
       liste.appendChild(li);
     });
     liste.hidden = !treffer.length;
@@ -395,7 +399,14 @@
   const istExakt = () => treffer.length && norm(feld.value) === norm(treffer[aktiv]);
 
   feld.addEventListener('input', aktualisiere);
-  feld.addEventListener('blur', schliesse);
+  // Solange der Finger/die Maus in der Liste ist, bleibt sie offen (blur wird ignoriert).
+  // Das Flag wird erst kurz nach dem Loslassen bzw. Abbrechen (Scrollen) zurückgesetzt,
+  // damit der click noch auf den Eintrag trifft.
+  let inListe = false;
+  liste.addEventListener('pointerdown', () => { inListe = true; });
+  ['pointerup', 'pointercancel'].forEach(t =>
+    liste.addEventListener(t, () => setTimeout(() => { inListe = false; }, 400)));
+  feld.addEventListener('blur', () => { if (!inListe) schliesse(); });
   feld.addEventListener('keydown', ev => {
     if (!treffer.length) return;
     if (ev.key === 'ArrowDown') { ev.preventDefault(); aktiv = (aktiv + 1) % treffer.length; zeichneVorschlaege(); }
