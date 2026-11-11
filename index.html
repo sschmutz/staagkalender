@@ -401,7 +401,7 @@
     if (!q) return schliesse();
     const anfang = gemeinden.filter(g => norm(g).startsWith(q));
     const enthaelt = gemeinden.filter(g => !norm(g).startsWith(q) && norm(g).includes(q));
-    treffer = [...anfang, ...enthaelt].slice(0, 8);
+    treffer = [...anfang, ...enthaelt]
     aktiv = 0;
     zeichneVorschlaege();
   }
