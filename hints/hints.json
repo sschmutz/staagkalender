@@ -19,7 +19,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 2,
-    "team_member": "Pascal"
+    "team_member": "Norah"
   },
   {
     "gemeinde": "Biberstein",
@@ -135,7 +135,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 21,
-    "team_member": "Piera"
+    "team_member": "Philipp"
   },
   {
     "gemeinde": "Frick",
@@ -225,7 +225,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 6,
-    "team_member": "Philipp"
+    "team_member": "Pascal"
   },
   {
     "gemeinde": "Muhen",
@@ -251,7 +251,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 12,
-    "team_member": "Sara"
+    "team_member": "Raphael"
   },
   {
     "gemeinde": "Rheinfelden",
@@ -277,7 +277,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 10,
-    "team_member": "Norah"
+    "team_member": "Nelson"
   },
   {
     "gemeinde": "Schafisheim",
@@ -329,7 +329,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 7,
-    "team_member": "Till"
+    "team_member": "Stefan"
   },
   {
     "gemeinde": "Spreitenbach",
@@ -415,7 +415,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 23,
-    "team_member": "Stefan"
+    "team_member": "Sara"
   },
   {
     "gemeinde": "Unterentfelden",
@@ -467,7 +467,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 22,
-    "team_member": "Raphael"
+    "team_member": "Piera"
   },
   {
     "gemeinde": "Vordemwald",
@@ -579,7 +579,7 @@
     "svg_kanton": "maps/svg/kanton.svg",
     "svg_gewaesser": "maps/svg/gewaesser.svg",
     "tag": 17,
-    "team_member": "Team"
+    "team_member": "Till"
   },
   {
     "gemeinde": "Wohlen (AG)",

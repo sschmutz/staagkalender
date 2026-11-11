@@ -18,6 +18,7 @@ team_members <-
     "Jonas",
     "Laura",
     "Liliana",
+    "Nelson",
     "Norah",
     "Pascal",
     "Philipp",
@@ -28,7 +29,7 @@ team_members <-
     "Till",
     # restliche Tage mit "Team" auffüllen
     # ohne 24., dieser ist fix fürs Team
-    rep("Team", 5)
+    rep("Team", 4)
   )
 
 hints <-
